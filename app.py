@@ -11,7 +11,7 @@ matplotlib.use('Agg')
 # Configuration de la page
 st.set_page_config(
     page_title="ICG - Interactive Chart Generator",
-    page_icon="📊",
+    page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -84,7 +84,7 @@ def initialize_llm():
     LLM_MODEL = st.secrets.get("LLM_MODEL", "gpt-4o-mini")
     
     if not API_KEY:
-        st.error("⚠️ Veuillez configurer OPENAI_API_KEY dans .streamlit/secrets.toml")
+        st.error("⚠ Veuillez configurer OPENAI_API_KEY dans .streamlit/secrets.toml")
         st.stop()
     
     llm = ChatOpenAI(
@@ -574,11 +574,11 @@ def main():
     
     # Sidebar pour l'upload et la configuration
     with st.sidebar:
-        st.header("⚙️ Configuration")
+        st.header("⚙ Configuration")
         
         # Upload de fichier
         uploaded_file = st.file_uploader(
-            "📁 Choisissez un fichier de données",
+            "📄 Choisissez un fichier de données",
             type=['csv', 'xlsx'],
             help="Téléchargez un fichier CSV ou Excel contenant vos données"
         )
@@ -592,10 +592,10 @@ def main():
             st.session_state.data_file = temp_path
             
             # Afficher les informations du fichier
-            st.success(f"✅ Fichier chargé : {uploaded_file.name}")
+            st.success(f"✓ Fichier chargé : {uploaded_file.name}")
             
             # Afficher un aperçu des données
-            with st.expander("👁️ Aperçu des données"):
+            with st.expander("👁 Aperçu des données"):
                 data_info = read_data(temp_path)
                 st.write(f"**Dimensions:** {data_info['shape'][0]} lignes × {data_info['shape'][1]} colonnes")
                 st.write(f"**Colonnes:** {', '.join(data_info['columns'])}")
@@ -603,7 +603,7 @@ def main():
         st.divider()
         
         # Bouton pour réinitialiser la conversation
-        if st.button("🔄 Nouvelle conversation"):
+        if st.button("🔄 Réinitialiser"):
             st.session_state.messages = []
             st.session_state.current_chart = None
             st.session_state.generated_code = None
@@ -628,28 +628,28 @@ def main():
             st.rerun()
         
         st.divider()
-        st.markdown("### 📖 Guide d'utilisation")
+        st.markdown("### 📖 Guide")
         st.markdown("""
-        1. **Uploadez** votre fichier de données (CSV/XLSX)
-        2. **Décrivez** le graphique que vous voulez créer
-        3. **Dialoguez** pour affiner et modifier le graphique
-        4. **Téléchargez** le résultat final
+        1. Uploadez votre fichier de données (CSV/XLSX)
+        2. Décrivez le graphique à créer
+        3. Affinez par modifications successives
+        4. Téléchargez le résultat
         """)
         
         # Indicateur de mode
         if st.session_state.generated_code is not None:
-            st.info("🔧 **Mode modification** : Les prochaines demandes modifieront le graphique actuel de manière incrémentale.")
+            st.info("⚡ Mode modification : Les prochaines demandes modifieront le graphique actuel.")
         
         # Indicateur d'historique
         if len(st.session_state.history) > 0:
-            st.success(f"📚 **Historique** : {len(st.session_state.history)} version(s) sauvegardée(s)")
-            st.caption("Utilisez le bouton '◀️ Retour' pour revenir en arrière")
+            st.success(f"📚 Historique : {len(st.session_state.history)} version(s) disponible(s)")
+            st.caption("Utilisez le bouton '← Retour' pour revenir en arrière")
     
     # Zone principale - Chat et graphique
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.subheader("💬 Conversation")
+        st.subheader("💭 Conversation")
         
         # Conteneur scrollable pour l'historique des messages
         chat_html = '<div class="chat-container">'
@@ -671,7 +671,7 @@ def main():
         
         if user_input:
             if st.session_state.data_file is None:
-                st.error("❌ Veuillez d'abord télécharger un fichier de données dans la sidebar.")
+                st.error("✗ Veuillez d'abord télécharger un fichier de données dans la sidebar")
             else:
                 # Sauvegarder l'état actuel avant de générer un nouveau graphique
                 save_current_state()
@@ -703,16 +703,16 @@ def main():
                     # Message différent selon le type de pipeline
                     pipeline_type = report.get("pipeline", "initial")
                     if pipeline_type == "initial":
-                        message = "✅ Graphique généré avec succès ! Vous pouvez le voir dans la zone de droite."
+                        message = "✓ Graphique généré avec succès"
                     else:
-                        message = "✅ Graphique modifié avec succès ! Les changements ont été appliqués."
+                        message = "✓ Graphique modifié avec succès"
                     
                     st.session_state.messages.append({
                         "role": "assistant",
                         "content": message
                     })
                 else:
-                    error_msg = "❌ Une erreur s'est produite lors de la génération du graphique."
+                    error_msg = "✗ Erreur lors de la génération du graphique"
                     if "error" in report:
                         error_msg += f"\n\nDétails: {report['error']}"
                     elif "log_debug" in report:
@@ -727,7 +727,7 @@ def main():
                 st.rerun()
     
     with col2:
-        st.subheader("📊 Graphique")
+        st.subheader("📈 Graphique")
         
         if st.session_state.current_chart and os.path.exists(st.session_state.current_chart):
             # Afficher le graphique
@@ -740,7 +740,7 @@ def main():
                 # Bouton de téléchargement
                 with open(st.session_state.current_chart, "rb") as file:
                     st.download_button(
-                        label="📥 Télécharger",
+                        label="⬇ Télécharger",
                         data=file,
                         file_name="graphique.png",
                         mime="image/png"
@@ -749,7 +749,7 @@ def main():
             with col_btn2:
                 # Bouton pour masquer/afficher le code
                 if st.session_state.generated_code:
-                    button_label = "👁️ Masquer" if st.session_state.show_code_editor else "🔧 Voir code"
+                    button_label = "👁 Masquer" if st.session_state.show_code_editor else "📝 Code"
                     if st.button(button_label):
                         st.session_state.show_code_editor = not st.session_state.show_code_editor
                         st.rerun()
@@ -757,18 +757,18 @@ def main():
             with col_btn3:
                 # Bouton retour (actif seulement s'il y a un historique)
                 if len(st.session_state.history) > 0:
-                    if st.button("◀️ Retour", help=f"Revenir à l'état précédent ({len(st.session_state.history)} version(s))"):
+                    if st.button("← Retour", help=f"Revenir à l'état précédent ({len(st.session_state.history)} version(s))"):
                         if restore_previous_state():
-                            st.success("✅ État précédent restauré !")
+                            st.success("✓ État précédent restauré")
                             st.rerun()
                 else:
-                    st.button("◀️ Retour", disabled=True, help="Pas d'historique disponible")
+                    st.button("← Retour", disabled=True, help="Pas d'historique disponible")
             
             # Éditeur de code (mis à jour automatiquement)
             if st.session_state.show_code_editor and st.session_state.generated_code:
                 st.divider()
-                st.subheader("💻 Code Python généré")
-                st.caption("✨ Le code se met à jour automatiquement à chaque génération. Vous pouvez le modifier et l'exécuter manuellement.")
+                st.subheader("📝 Code Python généré")
+                st.caption("Le code se met à jour automatiquement. Vous pouvez le modifier et l'exécuter manuellement.")
                 
                 # Zone de texte éditable avec le code (clé dynamique pour forcer la mise à jour)
                 code_hash = hash(st.session_state.generated_code)
@@ -781,21 +781,21 @@ def main():
                 
                 # Détecter si l'utilisateur a modifié le code
                 if edited_code != st.session_state.generated_code:
-                    st.info("✏️ **Code modifié** : Les prochaines modifications seront basées sur votre code personnalisé.")
+                    st.info("Code modifié : Les prochaines modifications utiliseront votre version.")
                     # Mettre à jour le code généré avec la version éditée
                     # Cela sera utilisé comme base pour les modifications suivantes
-                    if st.button("💾 Sauvegarder les modifications", type="secondary", key="save_code"):
+                    if st.button("💾 Enregistrer", type="secondary", key="save_code"):
                         st.session_state.generated_code = edited_code
-                        st.success("✅ Code sauvegardé ! Les prochaines demandes modifieront ce code.")
+                        st.success("✓ Code enregistré")
                         st.rerun()
                 
                 # Boutons pour exécuter ou réinitialiser
                 col_exec1, col_exec2 = st.columns(2)
                 
                 with col_exec1:
-                    if st.button("▶️ Exécuter le code", type="primary"):
+                    if st.button("▶ Exécuter", type="primary"):
                         if edited_code.strip():
-                            with st.spinner("🚀 Exécution du code..."):
+                            with st.spinner("⚡ Exécution en cours..."):
                                 # Ajouter la configuration matplotlib
                                 code_to_run = """import matplotlib
 matplotlib.use('Agg')
@@ -815,19 +815,19 @@ matplotlib.use('Agg')
                                 except:
                                     pass
                                 
-                                # Vérifier le résultat
-                                if log:
-                                    st.error(f"❌ Erreur lors de l'exécution:\n```\n{log}\n```")
+                            # Vérifier le résultat
+                            if log:
+                                st.error(f"✗ Erreur lors de l'exécution:\n```\n{log}\n```")
+                            else:
+                                # Vérifier si le graphique a été généré
+                                if os.path.exists("graphique.png"):
+                                    st.session_state.current_chart = os.path.join(os.getcwd(), "graphique.png")
+                                    st.success("✓ Code exécuté avec succès")
+                                    st.rerun()
                                 else:
-                                    # Vérifier si le graphique a été généré
-                                    if os.path.exists("graphique.png"):
-                                        st.session_state.current_chart = os.path.join(os.getcwd(), "graphique.png")
-                                        st.success("✅ Code exécuté avec succès ! Le graphique a été mis à jour.")
-                                        st.rerun()
-                                    else:
-                                        st.warning("⚠️ Le code s'est exécuté mais aucun graphique n'a été généré.")
+                                    st.warning("⚠ Le code s'est exécuté mais aucun graphique n'a été généré")
                         else:
-                            st.warning("⚠️ Le code est vide.")
+                            st.warning("⚠ Le code est vide")
                 
                 with col_exec2:
                     if st.button("🔄 Réinitialiser"):
@@ -835,7 +835,7 @@ matplotlib.use('Agg')
                         st.rerun()
                 
                 # Informations utiles
-                st.info("💡 **Conseils :**\n"
+                st.info("Conseils :\n"
                        "- Modifiez le code directement dans la zone ci-dessus\n"
                        "- Le graphique doit être sauvegardé avec `plt.savefig('graphique.png')`\n"
                        "- Cliquez sur 'Exécuter' pour regénérer le graphique")
