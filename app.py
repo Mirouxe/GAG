@@ -94,6 +94,64 @@ def initialize_llm():
     )
     return llm
 
+#################################### Gestion de l'historique ####################################
+def save_current_state():
+    """Sauvegarde l'état actuel dans l'historique avant une modification"""
+    import shutil
+    
+    # Ne sauvegarder que si on a au moins un graphique
+    if st.session_state.current_chart and os.path.exists(st.session_state.current_chart):
+        # Créer une copie du graphique avec un nom unique
+        history_chart_path = f"graphique_history_{len(st.session_state.history)}.png"
+        try:
+            shutil.copy(st.session_state.current_chart, history_chart_path)
+            
+            # Sauvegarder l'état complet
+            state = {
+                "code": st.session_state.generated_code,
+                "chart_path": history_chart_path,
+                "messages": st.session_state.messages.copy(),
+            }
+            
+            st.session_state.history.append(state)
+            
+            # Limiter l'historique à 10 états pour éviter de consommer trop de mémoire
+            if len(st.session_state.history) > 10:
+                # Supprimer le plus ancien état et son fichier
+                old_state = st.session_state.history.pop(0)
+                if os.path.exists(old_state["chart_path"]):
+                    try:
+                        os.remove(old_state["chart_path"])
+                    except:
+                        pass
+        except Exception as e:
+            print(f"Erreur lors de la sauvegarde de l'historique: {e}")
+
+def restore_previous_state():
+    """Restaure l'état précédent depuis l'historique"""
+    if st.session_state.history:
+        # Récupérer le dernier état
+        previous_state = st.session_state.history.pop()
+        
+        # Restaurer l'état
+        st.session_state.generated_code = previous_state["code"]
+        st.session_state.messages = previous_state["messages"]
+        
+        # Copier le graphique de l'historique vers le graphique actuel
+        if os.path.exists(previous_state["chart_path"]):
+            import shutil
+            shutil.copy(previous_state["chart_path"], "graphique.png")
+            st.session_state.current_chart = os.path.join(os.getcwd(), "graphique.png")
+            
+            # Supprimer le fichier de l'historique
+            try:
+                os.remove(previous_state["chart_path"])
+            except:
+                pass
+        
+        return True
+    return False
+
 #################################### Contextes des agents ####################################
 INTERPRETER_CONTEXT = """
 Tu es un interpréteur scientifique spécialisé en physique.
@@ -511,6 +569,8 @@ def main():
         st.session_state.show_code_editor = False
     if "is_first_request" not in st.session_state:
         st.session_state.is_first_request = True
+    if "history" not in st.session_state:
+        st.session_state.history = []  # Historique des états (code, graphique, messages)
     
     # Sidebar pour l'upload et la configuration
     with st.sidebar:
@@ -549,6 +609,17 @@ def main():
             st.session_state.generated_code = None
             st.session_state.is_first_request = True
             st.session_state.show_code_editor = False
+            
+            # Nettoyer l'historique et supprimer les fichiers
+            for state in st.session_state.history:
+                if "chart_path" in state and os.path.exists(state["chart_path"]):
+                    try:
+                        os.remove(state["chart_path"])
+                    except:
+                        pass
+            st.session_state.history = []
+            
+            # Supprimer le graphique actuel
             if os.path.exists("graphique.png"):
                 try:
                     os.remove("graphique.png")
@@ -568,6 +639,11 @@ def main():
         # Indicateur de mode
         if st.session_state.generated_code is not None:
             st.info("🔧 **Mode modification** : Les prochaines demandes modifieront le graphique actuel de manière incrémentale.")
+        
+        # Indicateur d'historique
+        if len(st.session_state.history) > 0:
+            st.success(f"📚 **Historique** : {len(st.session_state.history)} version(s) sauvegardée(s)")
+            st.caption("Utilisez le bouton '◀️ Retour' pour revenir en arrière")
     
     # Zone principale - Chat et graphique
     col1, col2 = st.columns([1, 1])
@@ -597,6 +673,9 @@ def main():
             if st.session_state.data_file is None:
                 st.error("❌ Veuillez d'abord télécharger un fichier de données dans la sidebar.")
             else:
+                # Sauvegarder l'état actuel avant de générer un nouveau graphique
+                save_current_state()
+                
                 # Ajouter le message utilisateur
                 st.session_state.messages.append({"role": "user", "content": user_input})
                 
@@ -655,7 +734,7 @@ def main():
             st.image(st.session_state.current_chart, width="stretch")
             
             # Boutons d'actions
-            col_btn1, col_btn2 = st.columns(2)
+            col_btn1, col_btn2, col_btn3 = st.columns(3)
             
             with col_btn1:
                 # Bouton de téléchargement
@@ -670,9 +749,20 @@ def main():
             with col_btn2:
                 # Bouton pour masquer/afficher le code
                 if st.session_state.generated_code:
-                    button_label = "👁️ Masquer le code" if st.session_state.show_code_editor else "🔧 Afficher le code"
+                    button_label = "👁️ Masquer" if st.session_state.show_code_editor else "🔧 Voir code"
                     if st.button(button_label):
                         st.session_state.show_code_editor = not st.session_state.show_code_editor
+                        st.rerun()
+            
+            with col_btn3:
+                # Bouton retour (actif seulement s'il y a un historique)
+                if len(st.session_state.history) > 0:
+                    if st.button("◀️ Retour", help=f"Revenir à l'état précédent ({len(st.session_state.history)} version(s))"):
+                        if restore_previous_state():
+                            st.success("✅ État précédent restauré !")
+                            st.rerun()
+                else:
+                    st.button("◀️ Retour", disabled=True, help="Pas d'historique disponible")
             
             # Éditeur de code (mis à jour automatiquement)
             if st.session_state.show_code_editor and st.session_state.generated_code:
