@@ -1,0 +1,130 @@
+═══════════════════════════════════════════════════════════════
+  📦 LISTE DES FICHIERS À TRANSFÉRER SUR LE NOUVEAU PC
+═══════════════════════════════════════════════════════════════
+
+✅ FICHIERS OBLIGATOIRES
+──────────────────────────────────────────────────────────────
+Ces fichiers DOIVENT être transférés :
+
+📄 app.py                      - Application principale
+📄 ICG_utils.py                - Fonctions utilitaires
+📄 requirements.txt            - Liste des bibliothèques Python
+📄 README.md                   - Documentation
+
+📁 .streamlit/
+   ├── secrets.toml            - ⚠️ VOS CLÉS API (très important !)
+   └── config.toml             - Configuration de l'interface
+
+📄 donnees_test.csv            - Fichier de test (recommandé)
+
+📄 install.sh                  - Script d'installation Mac/Linux
+📄 install.bat                 - Script d'installation Windows
+📄 GUIDE_TRANSFERT.md          - Guide complet d'installation
+
+
+📁 OPTIONNEL (utile mais pas obligatoire)
+──────────────────────────────────────────────────────────────
+📄 start_app.sh                - Script de démarrage rapide
+📁 documentation/              - Documentation supplémentaire
+
+
+❌ NE PAS TRANSFÉRER
+──────────────────────────────────────────────────────────────
+Ces dossiers/fichiers seront recréés sur le nouveau PC :
+
+📁 venv/                       - Environnement virtuel
+📁 __pycache__/                - Cache Python
+📄 graphique.png               - Fichiers temporaires
+📄 *.pyc                       - Fichiers compilés
+
+
+═══════════════════════════════════════════════════════════════
+  🚀 INSTALLATION SUR LE NOUVEAU PC
+═══════════════════════════════════════════════════════════════
+
+MÉTHODE 1 : Script automatique (recommandé)
+──────────────────────────────────────────────────────────────
+Windows :
+   Double-cliquez sur install.bat
+
+Mac/Linux :
+   ./install.sh
+
+
+MÉTHODE 2 : Installation manuelle
+──────────────────────────────────────────────────────────────
+1. Créer l'environnement virtuel :
+   python3 -m venv venv          (Mac/Linux)
+   python -m venv venv           (Windows)
+
+2. Activer l'environnement :
+   source venv/bin/activate      (Mac/Linux)
+   venv\Scripts\activate         (Windows)
+
+3. Installer les bibliothèques :
+   pip install -r requirements.txt
+
+4. Configurer .streamlit/secrets.toml avec votre clé API
+
+5. Lancer l'application :
+   streamlit run app.py
+
+
+═══════════════════════════════════════════════════════════════
+  📚 BIBLIOTHÈQUES QUI SERONT INSTALLÉES
+═══════════════════════════════════════════════════════════════
+
+Ces bibliothèques seront installées automatiquement via
+requirements.txt (pas besoin de les installer une par une) :
+
+✓ streamlit       - Interface web
+✓ pandas          - Manipulation de données
+✓ numpy           - Calculs numériques
+✓ matplotlib      - Graphiques
+✓ seaborn         - Graphiques statistiques
+✓ langchain       - Orchestration IA
+✓ langchain-openai- Intégration OpenAI
+✓ openai          - API OpenAI
+✓ openpyxl        - Fichiers Excel
+
+⏱️  Temps d'installation : 2-5 minutes
+
+
+═══════════════════════════════════════════════════════════════
+  🔑 IMPORTANT : CLÉ API OPENAI
+═══════════════════════════════════════════════════════════════
+
+⚠️  Vous DEVEZ configurer votre clé API OpenAI !
+
+Dans le fichier .streamlit/secrets.toml :
+
+OPENAI_API_KEY = "sk-votre-cle-ici"
+LLM_MODEL = "gpt-4o-mini"
+
+Si vous n'avez pas de clé :
+→ https://platform.openai.com/api-keys
+
+
+═══════════════════════════════════════════════════════════════
+  ✅ CHECKLIST DE VÉRIFICATION
+═══════════════════════════════════════════════════════════════
+
+Avant de transférer :
+□ Tous les fichiers obligatoires sont copiés
+□ Le fichier .streamlit/secrets.toml contient votre clé API
+□ Vous avez la clé API OpenAI sous la main
+
+Sur le nouveau PC :
+□ Python 3.8+ est installé
+□ Les fichiers sont transférés
+□ Script d'installation exécuté
+□ Clé API configurée dans secrets.toml
+□ Application démarre sans erreur
+
+
+═══════════════════════════════════════════════════════════════
+
+Pour plus de détails, consultez GUIDE_TRANSFERT.md
+
+═══════════════════════════════════════════════════════════════
+

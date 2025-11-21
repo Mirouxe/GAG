@@ -1,0 +1,63 @@
+═══════════════════════════════════════════════════════════════════════════
+   DÉPLOIEMENT RAPIDE SUR STREAMLIT CLOUD - Instructions étape par étape
+═══════════════════════════════════════════════════════════════════════════
+
+📋 ÉTAPE 1 : Créer un repository GitHub
+────────────────────────────────────────────────────────────────────────────
+1. Allez sur https://github.com
+2. Cliquez sur le bouton "+" → "New repository"
+3. Nom du repository : icg-chart-generator (ou autre nom)
+4. Visibilité : Public (requis pour plan gratuit)
+5. Cliquez sur "Create repository"
+
+📤 ÉTAPE 2 : Pousser le code sur GitHub
+────────────────────────────────────────────────────────────────────────────
+Dans le terminal, dans le dossier /Users/maximemiroux/Documents/ICG :
+
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/VOTRE-USERNAME/VOTRE-REPO.git
+git branch -M main
+git push -u origin main
+
+⚠️  Remplacez VOTRE-USERNAME et VOTRE-REPO par vos vraies valeurs !
+
+🚀 ÉTAPE 3 : Déployer sur Streamlit Cloud
+────────────────────────────────────────────────────────────────────────────
+1. Allez sur https://share.streamlit.io
+2. Cliquez sur "Sign in with GitHub"
+3. Autorisez l'accès à vos repositories
+4. Cliquez sur "New app"
+5. Sélectionnez votre repository
+6. Branch : main
+7. Main file : app.py
+8. Cliquez sur "Advanced settings..."
+
+🔐 ÉTAPE 4 : Configurer les secrets
+────────────────────────────────────────────────────────────────────────────
+Dans la section "Secrets", copiez-collez :
+
+OPENAI_API_KEY = "VOTRE-CLE-API-ICI"
+LLM_MODEL = "gpt-4o-mini"
+
+⚠️  Remplacez VOTRE-CLE-API-ICI par votre vraie clé API OpenAI !
+
+✅ ÉTAPE 5 : Lancer le déploiement
+────────────────────────────────────────────────────────────────────────────
+1. Cliquez sur "Deploy!"
+2. Attendez 3-5 minutes
+3. Votre app sera disponible à : https://VOTRE-APP.streamlit.app
+
+🔄 Pour mettre à jour l'app plus tard
+────────────────────────────────────────────────────────────────────────────
+git add .
+git commit -m "Description de la modification"
+git push
+
+→ L'app se mettra à jour automatiquement sur Streamlit Cloud !
+
+═══════════════════════════════════════════════════════════════════════════
+   Consultez DEPLOIEMENT.md pour plus de détails et le dépannage
+═══════════════════════════════════════════════════════════════════════════
+
