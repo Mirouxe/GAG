@@ -1,4 +1,6 @@
-# 📚 Documentation Technique - Interactive Chart Generator (ICG)
+# 📚 Documentation Technique - GAG (Génération Assistée de Graphiques)
+
+**Développé par Communauté IA**
 
 ## 📋 Table des matières
 
@@ -17,7 +19,7 @@
 
 ## 🏗️ Architecture générale
 
-L'application ICG est une application web Streamlit qui utilise un système multi-agents basé sur LangChain et OpenAI GPT pour générer et modifier des graphiques scientifiques à partir de fichiers de données.
+L'application GAG (Génération Assistée de Graphiques) est une application web Streamlit qui utilise un système multi-agents basé sur LangChain et OpenAI GPT pour générer et modifier des graphiques scientifiques à partir de fichiers de données.
 
 ### Composants principaux
 
@@ -912,5 +914,6 @@ Cette documentation couvre l'intégralité de l'architecture et du fonctionnemen
 
 ---
 
-*Développé avec ❤️ et 🤖*
+**GAG - Génération Assistée de Graphiques**  
+*Développé avec ❤️ par Communauté IA*
 

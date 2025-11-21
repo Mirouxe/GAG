@@ -1,6 +1,8 @@
-# 📊 Interactive Chart Generator (ICG)
+# 📈 GAG - Génération Assistée de Graphiques
 
-Application web interactive pour générer et modifier des graphiques scientifiques à partir de fichiers de données, propulsée par l'intelligence artificielle.
+Application web pour générer et modifier des graphiques scientifiques à partir de fichiers de données, propulsée par l'intelligence artificielle.
+
+**Développé par Communauté IA**
 
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -25,8 +27,8 @@ Application web interactive pour générer et modifier des graphiques scientifiq
 
 ```bash
 # Cloner le repository
-git clone https://github.com/VOTRE-USERNAME/icg-chart-generator.git
-cd icg-chart-generator
+git clone https://github.com/Mirouxe/GAG.git
+cd GAG
 
 # Installation automatique
 ./install.sh          # Mac/Linux
@@ -139,5 +141,6 @@ Pour toute question ou problème :
 
 ---
 
-Fait avec ❤️ et 🤖
+**GAG - Génération Assistée de Graphiques**  
+Développé avec ❤️ par **Communauté IA**
 

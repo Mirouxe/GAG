@@ -10,7 +10,7 @@ matplotlib.use('Agg')
 
 # Configuration de la page
 st.set_page_config(
-    page_title="ICG - Interactive Chart Generator",
+    page_title="GAG - Génération Assistée de Graphiques",
     page_icon="📈",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -551,7 +551,8 @@ def generate_chart(llm, user_prompt, data_file_path, is_first_request, previous_
 #################################### Interface Streamlit ####################################
 def main():
     # En-tête
-    st.markdown('<h1 class="main-header">📊 Interactive Chart Generator</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">📈 GAG - Génération Assistée de Graphiques</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; color: #666; margin-top: -1rem; margin-bottom: 2rem;">Développé par <strong>Communauté IA</strong></p>', unsafe_allow_html=True)
     st.markdown("### Générez et modifiez des graphiques scientifiques en temps réel par dialogue")
     
     # Initialisation de la session
